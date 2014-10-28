@@ -1,0 +1,26 @@
+"use strict";
+
+let http = require('http');
+let xml2json = require('xml2json');
+
+let ZILLOW_ID = 'X1-ZWz1b29aw4bf2j_56tmg';
+
+//let url = 'http://www.zillow.com/webservice/GetDeepComps.htm?zws-id='+ZILLOW_ID+'&zpid=48749425&count=5&output=json';
+let url = 'http://www.zillow.com/webservice/GetSearchResults.htm?zws-id='+ZILLOW_ID+'&address=113+Waverly+St&citystatezip=94086';
+let url = 'http://www.zillow.com/homes/recently_sold/7fce95446cX1-CR15qkrqab8jiy5_124d5t_crid/zest_sort/37.390908,-122.029631,37.360931,-122.056754_rect/14_zm/1_p/';
+http
+.get(url, function ( response ) {
+    let buffer = '';
+
+    response.on("data", function (chunk) {
+        buffer += chunk;
+    });
+
+    response.on("end", function (err) {
+        // finished transferring data
+        // dump the raw data
+        let data = JSON.parse(xml2json.toJson(buffer));
+        console.log(">> "+data["SearchResults:searchresults"].response.results.result.zpid);
+//         console.log(">> "+JSON.stringify(data.response.results.result.zpid, null, 4));
+    });
+});
